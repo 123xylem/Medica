@@ -3,6 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --white: #ffffffff;
+  --rich-black: #00171fff;
+  --prussian-blue: #003459ff;
+  --cerulean: #007ea7ff;
 }
 
 @theme inline {
@@ -22,5 +26,32 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Utility Classes */
+.bg-white {
+  background-color: var(--white);
+}
+.bg-rich-black {
+  background-color: var(--rich-black);
+}
+.bg-prussian-blue {
+  background-color: var(--prussian-blue);
+}
+.bg-cerulean {
+  background-color: var(--cerulean);
+}
+
+.text-white {
+  color: var(--white);
+}
+.text-rich-black {
+  color: var(--rich-black);
+}
+.text-prussian-blue {
+  color: var(--prussian-blue);
+}
+.text-cerulean {
+  color: var(--cerulean);
 }

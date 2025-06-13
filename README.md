@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Medica
 
-## Getting Started
+## Summary of the latest meta studies of scientific research
 
-First, run the development server:
+Quickly view the summaries of research on any given topic
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## How it works
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Scrapes medical publishers abstracts/conclusions for meta studies on given keywords
+Presents it back in ui as article excerpts (article counts) (keyword map)
+Performs 2nd query to ai model to summarise all articles
+Presents summary
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Blog
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+It performs weekly scan of google trends medical research and searches the meta on those keywords
+These results are stored as blog pages (weekly)
+Also common keywords (searched > 5) are stored as blog pages (and cached)
 
-## Learn More
+## Stack
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### APIs
 
-## Deploy on Vercel
+     - Entrez api (data)
+     - Open APi or hugging face(summary model)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### DB
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+     - SQL
