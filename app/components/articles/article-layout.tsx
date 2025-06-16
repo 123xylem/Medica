@@ -11,7 +11,10 @@ import { useQuery } from "@tanstack/react-query";
 const ArticleLayout = ({ query }: { query: string }) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["articles", query],
-    queryFn: () => scrapeArticles(query),
+    queryFn: async () => {
+      const data = await scrapeArticles(query);
+      return data;
+    },
     enabled: !!query,
     // Only select the data we need
     // select: (data) => ({
@@ -23,32 +26,31 @@ const ArticleLayout = ({ query }: { query: string }) => {
     refetchOnWindowFocus: false,
   });
   const [articles, setArticles] = useState([]);
-  const [summaryText, setSummaryText] = useState("");
-  const [keywords, setKeywords] = useState([]);
+  // const [summaryText, setSummaryText] = useState("");
+  const [keywords, setKeywords] = useState({});
   useEffect(() => {
     if (data) {
-      console.log(data);
-
-      setArticles(data);
-      setSummaryText(data.summary);
+      setArticles(data.articles);
+      // setSummaryText(data.summary);
       setKeywords(data.keywords);
     }
   }, [data]);
-  console.log(articles, typeof articles);
   return (
-    <div className="flex flex-col items-center justify-center">
-      {isLoading && <p>Loading...</p>}
+    <div className="flex flex-col items-center justify-center gap-4">
+      {isLoading && <p className="text-2xl font-bold">Loading...</p>}
       {error && <p>Error: {error.message}</p>}
 
-      <h1 className="text-2xl font-bold">Search Results</h1>
-      <div id="results" className="flex flex-wrap items-center justify-center">
-        {articles.id + " " + articles.title}
-        {/* {articles.map((article: Article) => {
-          return <ArticleCard key={article.id} article={article} />;
-        })} */}
-      </div>
-      {summaryText && <ArticleSummary summaryText={summaryText} />}
+      <h1 className="text-2xl font-bold">
+        Search Results: {articles.length || 0}
+      </h1>
       {keywords && <KeywordMap keywords={keywords} />}
+      <div id="results" className="flex flex-wrap  gap-4">
+        {articles &&
+          articles.map((article: Article) => {
+            return <ArticleCard key={article.id} article={article} />;
+          })}
+      </div>
+      {/* {summaryText && <ArticleSummary summaryText={summaryText} />} */}
     </div>
   );
 };
