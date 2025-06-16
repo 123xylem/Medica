@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import ArticleCard from "./article-card";
 import { Article } from "@/types/";
-import ArticleSummary from "./article-summary";
-import KeywordMap from "./keyword-map";
+import SummaryOverview from "./summary-overview";
 import scrapeArticles from "@/lib/api/scrape-articles";
 import { useQuery } from "@tanstack/react-query";
+import summariseArticles from "@/lib/api/summarise-articles";
+import { Loader } from "lucide-react";
 
 const ArticleLayout = ({ query }: { query: string }) => {
   const { data, isLoading, error } = useQuery({
@@ -26,31 +27,55 @@ const ArticleLayout = ({ query }: { query: string }) => {
     refetchOnWindowFocus: false,
   });
   const [articles, setArticles] = useState([]);
-  // const [summaryText, setSummaryText] = useState("");
   const [keywords, setKeywords] = useState({});
+  const [summaryText, setSummaryText] = useState("");
+
   useEffect(() => {
     if (data) {
       setArticles(data.articles);
-      // setSummaryText(data.summary);
       setKeywords(data.keywords);
+
+      if (!data.summary_text) {
+        setSummaryText("No summary available");
+      } else {
+        summariseArticles(data.summary_text)
+          .then((summary) => {
+            if (summary) setSummaryText(summary);
+          })
+          .catch((err) => console.error("Summary error:", err));
+      }
     }
   }, [data]);
+
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      {isLoading && <p className="text-2xl font-bold">Loading...</p>}
+      {isLoading && (
+        <p className="text-2xl font-bold">
+          Loading...
+          <Loader className="animate-spin" />
+        </p>
+      )}
       {error && <p>Error: {error.message}</p>}
 
-      <h1 className="text-2xl font-bold">
-        Search Results: {articles.length || 0}
-      </h1>
-      {keywords && <KeywordMap keywords={keywords} />}
-      <div id="results" className="flex flex-wrap  gap-4">
-        {articles &&
-          articles.map((article: Article) => {
-            return <ArticleCard key={article.id} article={article} />;
-          })}
-      </div>
-      {/* {summaryText && <ArticleSummary summaryText={summaryText} />} */}
+      {!isLoading && (
+        <>
+          <h1 className="text-2xl font-bold">
+            Search Results: {articles.length || 0}
+          </h1>
+
+          <SummaryOverview
+            keywords={keywords}
+            summaryText={summaryText}
+            isLoading={!summaryText && !!data?.summary_text}
+          />
+
+          <div id="results" className="flex flex-wrap gap-4">
+            {articles?.map((article: Article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
