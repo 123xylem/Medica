@@ -1,7 +1,7 @@
 const ArticleSummary = ({ summaryText }: { summaryText: string }) => {
   return (
     <div className="text-sm text-gray-500">
-      <h2 className="text-md font-bold">Meta Summary</h2>
+      <h3 className="text-lg text-white font-bold">Article Summary</h3>
       <p>{summaryText}</p>
     </div>
   );

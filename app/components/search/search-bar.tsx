@@ -18,7 +18,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   return (
     <form
       onSubmit={handleSearch}
-      className="flex items-center justify-center gap-2 max-w-2xl mx-auto"
+      className="flex items-center justify-center gap-2 max-w-2xl mx-auto w-full"
     >
       <input
         type="text"
